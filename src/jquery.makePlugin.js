@@ -153,7 +153,7 @@
             });
 
             if (fullDestroy_) {
-                self.element.remove();
+                $(self.element).remove();
             }
         };
 
