@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>jquery.tableStyler.js Test</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="../../src/jquery.makePlugin.js"></script>
+    <script src="jquery.tableStyler.js"></script>
+    <script>
+        $(function () {
+            // Create the plugin, overriding the default values for some styles
+            var table = $("#mytable").tableStyler({
+                "style": {
+                    "backgroundColor": "#cca", // Default: "#faa"
+                    "borderWidth": "3px" // Default: "1px"
+                }
+            });
+
+            // Wire up event handlers for buttons
+            $("#boldifyButton").click(function (e) {
+                table.tableStyler("boldify");
+            });
+
+            $("#setFontNameButton").click(function (e) {
+                var fontName = $("#fontName").val();
+                table.tableStyler("setFontName", fontName);
+            });
+
+            $("#destroyButton").click(function (e) {
+                table.tableStyler("unbindEventHandlers");
+            });
+
+            $("#simulateClickButton").click(function (e) {
+                table.tableStyler("simulateTableClick");
+            });
+
+            $("#fullDestroyButton").click(function (e) {
+                table.tableStyler("destroyPlugin");
+            });
+        });
+    </script>
+</head>
+<body>
+    <table id="mytable">
+        <thead>
+            <tr>
+                <th>Alpha</th>
+                <th>Bravo</th>
+                <th>Charlie</th>
+                <th>Delta</th>
+            </tr>
+        </thead>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>A</td>
+            <td>B</td>
+            <td>C</td>
+            <td>D</td>
+        </tr>
+        <tr>
+            <td>Eh</td>
+            <td>Bee</td>
+            <td>See</td>
+            <td>Dee</td>
+        </tr>
+        <tr>
+            <td>Uno</td>
+            <td>Dos</td>
+            <td>Tres</td>
+            <td>Quatro</td>
+        </tr>
+    </table>
+
+    <button id="boldifyButton">Make text bold</button><br>
+    <button id="setFontNameButton">Set font name</button><input type="text" id="fontName" value="Arial" /><br>
+    <button id="destroyButton">Unbind event handlers</button><br>
+    <button id="simulateClickButton">Simulate table click</button><br>
+    <button id="fullDestroyButton">Destroy the plugin</button>
+</body>
+</html>
