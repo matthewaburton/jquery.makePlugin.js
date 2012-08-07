@@ -47,9 +47,9 @@
      *
      * Properties:
      *
-     *     target - *{Object}* The object to which the event handler will be attached.
-     *     eventName - *{string}* The name of the event to listen for.
-     *     selector - *{string}* The selector to use when defining the scope for an
+     *     target - *{Object|function():Object}* The object to which the event handler will be attached.
+     *     eventName - *{string|function():string}* The name of the event to listen for.
+     *     selector - *{string|function():string}* The selector to use when defining the scope for an
      *         event handler.
      *     handler - *{function(this:Plugin, ...[Object])}* The event handler function.
      *         Event handlers are executed in the context of the <Plugin> instance.
@@ -108,10 +108,10 @@
          * Property: api
          *
          * The plugin's API (public) methods.  API methods are accessed internally
-         * (by the plugin developer) by calling
+         * (by the plugin author) by calling
          *     : this.api.myMethod(args...)
          * ... and externally (by the plugin user) by calling
-         *     : $("#selector").myPlugin("myMethods", args...)
+         *     : $("#selector").myPlugin("myMethod", args...)
          *
          * API methods are executed in the context of the <Plugin> instance.
          */
@@ -165,22 +165,27 @@
          * Parameters:
          *
          *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string}* The name of the event to listen for.
+         *     handlerDef.eventName - *{string|function():string}* The name of the event to listen for.
          *     handlerDef.handler -  *{function(this:Plugin, ...[Object])}* The event handler function.
          *         Executed in the context of the <Plugin> instance.
-         *     handlerDef.target - *{Object=}* The object to which the event handler will
+         *     handlerDef.target - *{Object|function():Object=}* The object to which the event handler will
          *         be attached. (Optional; default: <Plugin.element>)
-         *     handlerDef.selector - *{string=}* The selector to use when defining the scope for the
+         *     handlerDef.selector - *{string|function():string=}* The selector to use when defining the scope for the
          *         event handler. (Optional)
          */
         this.bind = function (handlerDef) {
             debug("Plugin.bind: handlerDef", handlerDef);
 
-            var target = handlerDef.target ? $(handlerDef.target) : $(self.element);
-            var eventName = (handlerDef.eventName + "." + self.pluginName);
-            var selector = handlerDef.selector || null;
+            var eventName = getValue(handlerDef.eventName);
+            if (!eventName) {
+                $.error("handlerDef.eventName is required");
+            }
+
+            var fullEventName = (eventName + "." + self.pluginName);
+            var target = getValue(handlerDef.target) || $(self.element);
+            var selector = getValue(handlerDef.selector) || null;
             var handler = handlerDef.handler || $.noop();
-            target.on(eventName, selector, function () { handler.apply(self, arguments); });
+            $(target).on(fullEventName, selector, function () { handler.apply(self, arguments); });
         };
 
         /**
@@ -191,19 +196,24 @@
          * Parameters:
          *
          *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string}* The name of the event to stop listening for.
-         *     handlerDef.target - *{Object=}* The object to which the event handler is
+         *     handlerDef.eventName - *{string|function():string}* The name of the event to stop listening for.
+         *     handlerDef.target - *{Object|function():Object=}* The object to which the event handler is
          *         attached. (Optional; default: <Plugin.element>)
-         *     handlerDef.selector - *{string=}* The selector to use when defining the scope for the
+         *     handlerDef.selector - *{string|function():string=}* The selector to use when defining the scope for the
          *         event handler. (Optional)
          */
         this.unbind = function (handlerDef) {
             debug("Plugin.unbind: handlerDef", handlerDef);
 
-            var target = handlerDef.target ? $(handlerDef.target) : $(self.element);
-            var eventName = (handlerDef.eventName + "." + self.pluginName);
-            var selector = handlerDef.selector || null;
-            target.off(eventName, selector);
+            var eventName = getValue(handlerDef.eventName);
+            if (!eventName) {
+                $.error("handlerDef.eventName is required");
+            }
+
+            var fullEventName = (eventName + "." + self.pluginName);
+            var target = getValue(handlerDef.target) || $(self.element);
+            var selector = getValue(handlerDef.selector) || null;
+            $(target).off(fullEventName, selector);
         };
 
         /**
@@ -214,16 +224,21 @@
          * Parameters:
          *
          *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string}* The name of the event to trigger.
-         *     handlerDef.target - *{Object=}* The object to which the event handler is
+         *     handlerDef.eventName - *{string|function():string}* The name of the event to trigger.
+         *     handlerDef.target - *{Object|function():Object=}* The object to which the event handler is
          *         attached. (Optional; default: <Plugin.element>)
          */
         this.trigger = function (handlerDef) {
             debug("Plugin.trigger: handlerDef", handlerDef);
 
-            var target = handlerDef.target ? $(handlerDef.target) : $(self.element);
-            var eventName = (handlerDef.eventName + "." + self.pluginName);
-            target.trigger(eventName);
+            var eventName = getValue(handlerDef.eventName);
+            if (!eventName) {
+                $.error("handlerDef.eventName is required");
+            }
+
+            var fullEventName = (eventName + "." + self.pluginName);
+            var target = getValue(handlerDef.target) || $(self.element);
+            $(target).trigger(fullEventName);
         };
 
         // Plugin initialization
@@ -276,6 +291,22 @@
     function debug() {
         if (DEBUG_MODE && console && console.info) {
             console.info.apply(console, arguments);
+        }
+    }
+
+
+    // Returns: 'val' -> (null || undefined): null
+    //          'val' -> function: 'val' return value
+    //          'val' -> ?: 'val'
+    function getValue(val) {
+        switch ($.type(val)) {
+            case "null":
+            case "undefined":
+                return null;
+            case "function":
+                return val();
+            default:
+                return val;
         }
     }
 
