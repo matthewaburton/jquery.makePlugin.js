@@ -72,7 +72,7 @@ used to construct the plugin, *eg.*, `"myPlugin" -> $("#foo").myPlugin()`.
 An object specifying default values for the plugin. These values can be overridden
 when the plugin is constructed. Prior to the `init` method being run, the caller's
 overriding values are merged with the plugin defaults; the resulting object is available
-to all plugin methods (public and private) via `this.options`.
+to all plugin methods (public and private) via `this.config`.
 
 -----
 
