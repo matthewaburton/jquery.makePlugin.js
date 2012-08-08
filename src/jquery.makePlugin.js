@@ -55,6 +55,7 @@
      *         Event handlers are executed in the context of the <Plugin> instance.
      *
      * Remarks:
+     * 
      *     To access the element which triggered the event define the handler function like so:
      *     : function (e) {
      *     :     var element = e.target;
@@ -72,6 +73,8 @@
         /**
          * Constructor: Plugin
          *
+         * Constructs a new instance of a Plugin.
+         * 
          * Parameters:
          *
          *     pluginDef - *{<PluginDefinition>}* The plugin definition.
