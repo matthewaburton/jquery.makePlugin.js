@@ -10,7 +10,7 @@
 
 (function ($) {
 
-    // Specifies whether to print debug messsages to the JavaScript
+    // Specifies whether to print debug messages to the JavaScript
     // console or not
     var DEBUG_MODE = true;
 
@@ -165,13 +165,14 @@
          * Parameters:
          *
          *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string|function():string}* The name of the event to listen for.
-         *     handlerDef.handler -  *{function(this:Plugin, ...[Object])}* The event handler function.
-         *         Executed in the context of the <Plugin> instance.
-         *     handlerDef.target - *{Object|function():Object=}* The object to which the event handler will
-         *         be attached. (Optional; default: <Plugin.element>)
-         *     handlerDef.selector - *{string|function():string=}* The selector to use when defining the scope for the
-         *         event handler. (Optional)
+         *     handlerDef.eventName - *{string|function(this:Plugin):string}* The name 
+         *         of the event to listen for.
+         *     handlerDef.handler -  *{function(this:Plugin, ...[Object])}* The event 
+         *         handler function. Executed in the context of the <Plugin> instance.
+         *     handlerDef.target - *{Object|function(this:Plugin):Object=}* The object 
+         *         to which the event handler will be attached. (Optional; default: <Plugin.element>)
+         *     handlerDef.selector - *{string|function(this:Plugin):string=}* The selector 
+         *         to use when defining the scope for the event handler. (Optional)
          */
         this.bind = function (handlerDef) {
             debug("Plugin.bind: handlerDef", handlerDef);
@@ -196,11 +197,12 @@
          * Parameters:
          *
          *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string|function():string}* The name of the event to stop listening for.
-         *     handlerDef.target - *{Object|function():Object=}* The object to which the event handler is
-         *         attached. (Optional; default: <Plugin.element>)
-         *     handlerDef.selector - *{string|function():string=}* The selector to use when defining the scope for the
-         *         event handler. (Optional)
+         *     handlerDef.eventName - *{string|function(this:Plugin):string}* The 
+         *         name of the event to stop listening for.
+         *     handlerDef.target - *{Object|function(this:Plugin):Object=}* The object 
+         *         to which the event handler is attached. (Optional; default: <Plugin.element>)
+         *     handlerDef.selector - *{string|function(this:Plugin):string=}* The selector 
+         *     to use when defining the scope for the event handler. (Optional)
          */
         this.unbind = function (handlerDef) {
             debug("Plugin.unbind: handlerDef", handlerDef);
@@ -224,9 +226,10 @@
          * Parameters:
          *
          *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string|function():string}* The name of the event to trigger.
-         *     handlerDef.target - *{Object|function():Object=}* The object to which the event handler is
-         *         attached. (Optional; default: <Plugin.element>)
+         *     handlerDef.eventName - *{string|function(this:Plugin):string}* The 
+         *         name of the event to trigger.
+         *     handlerDef.target - *{Object|function(this:Plugin):Object=}* The object 
+         *         to which the event handler is attached. (Optional; default: <Plugin.element>)
          */
         this.trigger = function (handlerDef) {
             debug("Plugin.trigger: handlerDef", handlerDef);
@@ -278,7 +281,23 @@
                 pluginDef.init.apply(self);
             }
 
-        })();
+        })(); // End: Plugin initialization
+
+        // Returns: val -> (null || undefined): null
+        //          val -> function: val(this:Plugin)
+        //          val -> ?: val
+        function getValue(val) {
+            switch ($.type(val)) {
+                case "null":
+                case "undefined":
+                    return null;
+                case "function":
+                    return val.apply(self);
+                default:
+                    return val;
+            }
+    }
+
 
     } // End: Plugin(element)
 
@@ -291,22 +310,6 @@
     function debug() {
         if (DEBUG_MODE && console && console.info) {
             console.info.apply(console, arguments);
-        }
-    }
-
-
-    // Returns: 'val' -> (null || undefined): null
-    //          'val' -> function: 'val' return value
-    //          'val' -> ?: 'val'
-    function getValue(val) {
-        switch ($.type(val)) {
-            case "null":
-            case "undefined":
-                return null;
-            case "function":
-                return val();
-            default:
-                return val;
         }
     }
 
