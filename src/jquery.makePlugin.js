@@ -105,7 +105,7 @@
          * The plugin configuration.  A deep merge is made of the caller's config
          * values into the plugin's default values.
          */
-        this.config = $.extend(true, pluginDef.defaults, config_);
+        this.config = $.extend(true, $.extend({}, pluginDef.defaults), config_);
 
         /**
          * Property: api
