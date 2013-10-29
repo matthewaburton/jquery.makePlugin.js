@@ -1,0 +1,32 @@
+#Content {
+    border-right-width: 1px !important;
+}
+
+#Menu {
+    left: inherit !important;
+}
+
+.MGroup > a {
+    border: 1px solid #000;
+    background-color: #a0a0a0;
+    color: #fff !important;
+
+    font-variant: normal;
+    font-weight: normal;
+
+    display: inline-block;
+    padding: 3px 5px;
+    width: 100%;
+}
+
+.MGroupContent {
+    padding-left: 10px;
+}
+
+.SEntry {
+    font-variant: normal !important;
+}
+
+.CTitle {
+    font-variant: normal !important;
+}
