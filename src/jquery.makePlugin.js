@@ -25,19 +25,17 @@
      * Provides properties for defining a plugin's identity, content, and behavior.
      *
      * Properties:
-     *
-     *     pluginName - *{string}* The name of the plugin.
-     *     defaults - *{Object}* An object containing the plugin's default configuration values.
-     *     init - *{function(this:Plugin)}* The plugin's initialization function. This method's
-     *         is executed in the context of the <Plugin> instance.
-     *     api - *{Object.<string, function(this:Plugin)>}* An object containing public API methods.
-     *         API methods are executed in the context of the <Plugin> instance.
-     *     helpers - *{Object.<string, function(this:Plugin)>|Object.<string, ?)>}* An object containing private
-     *         "helper" methods and properties. Helper methods are executed in the context of the
-     *         <Plugin> instance.
-     *     eventHandlers - *{Object.<string, EventHandlerDefinition>}* An object containing event
-     *         handlers to be registered by the plugin. Event handlers are executed in
-     *         the context of the <Plugin> instance.
+     *     pluginName - {String} The name of the plugin.
+     *     defaults - {Object.<String, ?)>} An object containing the plugin's default configuration values
+     *     init - {Function(this:Plugin)} The plugin's initialization method; this method is executed
+     *            in the context of the <Plugin> instance.
+     *     api - {Object.<String, Function(this:Plugin)>} An object containing public API methods API
+     *           methods are executed in the context of the <Plugin> instance.
+     *     helpers - {Object.<String, Function(this:Plugin)>|Object.<String, ?)>} An object containing
+     *               private "helper" methods and properties. Helper methods are executed in the context
+     *               of the <Plugin> instance.
+     *     eventHandlers - {Array.<EventHandlerDefinition>} An array of event handlers to be registered by
+     *                     the plugin. Event handlers are executed in the context of the <Plugin> instance.
      */
 
     /**
@@ -46,17 +44,15 @@
      * Provides properties for defining an event handler's target and behavior.
      *
      * Properties:
-     *
-     *     target - *{Object|function():Object}* The object to which the event handler will be attached.
-     *     eventName - *{string|function():string}* The name of the event to listen for.
-     *     selector - *{string|function():string}* The selector to use when defining the scope for an
-     *         event handler.
-     *     handler - *{function(this:Plugin, ...[Object])}* The event handler function.
-     *         Event handlers are executed in the context of the <Plugin> instance.
+     *     target - {Object|Function():Object} The object to which the event handler will be attached.
+     *     eventName - {String|Function():String} The name of the event to listen for.
+     *     selector - {String|Function():String} The selector to use when defining the scope for an event handler.
+     *     handler - {Function(this:Plugin, ...[Object])} The event handler function. Event handlers are executed
+     *               in the context of the <Plugin> instance.
      *
      * Remarks:
-     * 
-     *     To access the element which triggered the event define the handler function like so:
+     *     To access the element which triggered the event, define the handler function like so...
+     *
      *     : function (e) {
      *     :     var element = e.target;
      *     :     // Event handler code...
@@ -68,18 +64,17 @@
      *
      * Represents a jQuery plugin and the element(s) it encapsulates.
      */
-    function Plugin(pluginDef, element, config_) {
+    function Plugin(pluginDef, element, config) {
 
         /**
          * Constructor: Plugin
          *
          * Constructs a new instance of a Plugin.
-         * 
-         * Parameters:
          *
-         *     pluginDef - *{<PluginDefinition>}* The plugin definition.
-         *     element - *{HTMLElement}* The HTML element(s) to be wrapped by the plugin.
-         *     config - *{Object=}* An object containing configuration settings for the plugin. (Optional)
+         * Parameters:
+         *     pluginDef - {<PluginDefinition>} The plugin definition.
+         *     element - {HTMLElement} The HTML element(s) to be wrapped by the plugin.
+         *     config - {Object} An object containing configuration settings for the plugin. (optional)
          */
 
         // Retain 'this' for closures
@@ -102,15 +97,15 @@
         /**
          * Property: config
          *
-         * The plugin configuration.  A deep merge is made of the caller's config
+         * The plugin configuration. A deep merge is made of the caller's config
          * values into the plugin's default values.
          */
-        this.config = $.extend(true, $.extend({}, pluginDef.defaults), config_);
+        this.config = $.extend(true, $.extend({ }, pluginDef.defaults), config);
 
         /**
          * Property: api
          *
-         * The plugin's API (public) methods.  API methods are accessed internally
+         * The plugin's API (public) methods. API methods are accessed internally
          * (by the plugin author) by calling
          *     : this.api.myMethod(args...)
          * ... and externally (by the plugin user) by calling
@@ -132,7 +127,7 @@
          * Property: eventHandlers
          *
          * The list of <EventHandlerDefinition> objects that are registered during the
-         * plugin initialization.  Event handlers are executed in the context of the
+         * plugin initialization. Event handlers are executed in the context of the
          * <Plugin> instance.
          */
         this.eventHandlers = pluginDef.eventHandlers || [ ];
@@ -143,11 +138,10 @@
          * Unbinds all event handlers that were registered during plugin initialization.
          *
          * Parameters:
-         *
-         *     fullDestroy_ - *{boolean=}* Specifies whether to delete the wrapped
-         *         element(s) or simply unbind event handlers. (Optional; default: false)
+         *     fullDestroy - {Boolean} Specifies whether to delete the wrapped element(s) or
+         *                   simply unbind event handlers. (optional; default: false)
          */
-        this.destroy = function (fullDestroy_) {
+        this.destroy = function (fullDestroy) {
             debug("Plugin.destroy");
 
             // Unbind event handlers
@@ -155,7 +149,7 @@
                 self.unbind(handlerDef);
             });
 
-            if (fullDestroy_) {
+            if (fullDestroy) {
                 $(self.element).remove();
             }
         };
@@ -166,16 +160,14 @@
          * Binds an event handler to an element, given the handler definition.
          *
          * Parameters:
-         *
-         *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string|function(this:Plugin):string}* The name 
-         *         of the event to listen for.
-         *     handlerDef.handler -  *{function(this:Plugin, ...[Object])}* The event 
-         *         handler function. Executed in the context of the <Plugin> instance.
-         *     handlerDef.target - *{Object|function(this:Plugin):Object=}* The object 
-         *         to which the event handler will be attached. (Optional; default: <Plugin.element>)
-         *     handlerDef.selector - *{string|function(this:Plugin):string=}* The selector 
-         *         to use when defining the scope for the event handler. (Optional)
+         *     handlerDef - {<EventHandlerDefinition>} The handler definition.
+         *     handlerDef.eventName - {String|Function(this:Plugin):string} The name of the event to listen for.
+         *     handlerDef.handler - {Function(this:Plugin, ...[Object])} The event handler function. Executed
+         *                          in the context of the <Plugin> instance.
+         *     handlerDef.target - {Object|Function(this:Plugin):Object} The object to which the event handler
+         *                         will be attached. (optional; default: <Plugin.element>)
+         *     handlerDef.selector - {String|Function(this:Plugin):String} The selector to use when defining
+         *                           the scope for the event handler. (optional)
          */
         this.bind = function (handlerDef) {
             debug("Plugin.bind: handlerDef", handlerDef);
@@ -187,7 +179,7 @@
 
             var fullEventName = (eventName + "." + self.pluginName);
             var target = getValue(handlerDef.target) || $(self.element);
-            var selector = getValue(handlerDef.selector) || null;
+            var selector = getValue(handlerDef.selector);
             var handler = handlerDef.handler || $.noop();
             $(target).on(fullEventName, selector, function () { handler.apply(self, arguments); });
         };
@@ -198,14 +190,13 @@
          * Unbinds an event handler, given the handler definition.
          *
          * Parameters:
-         *
-         *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string|function(this:Plugin):string}* The 
-         *         name of the event to stop listening for.
-         *     handlerDef.target - *{Object|function(this:Plugin):Object=}* The object 
-         *         to which the event handler is attached. (Optional; default: <Plugin.element>)
-         *     handlerDef.selector - *{string|function(this:Plugin):string=}* The selector 
-         *     to use when defining the scope for the event handler. (Optional)
+         *     handlerDef - {<EventHandlerDefinition>} The handler definition.
+         *     handlerDef.eventName - {String|Function(this:Plugin):String} The name of the event to stop
+         *                            listening for.
+         *     handlerDef.target - {Object|Function(this:Plugin):Object} The object to which the event handler
+         *                         is attached. (optional; default: <Plugin.element>)
+         *     handlerDef.selector - {String|Function(this:Plugin):String} The selector to use when defining
+         *                           the scope for the event handler. (optional)
          */
         this.unbind = function (handlerDef) {
             debug("Plugin.unbind: handlerDef", handlerDef);
@@ -217,7 +208,7 @@
 
             var fullEventName = (eventName + "." + self.pluginName);
             var target = getValue(handlerDef.target) || $(self.element);
-            var selector = getValue(handlerDef.selector) || null;
+            var selector = getValue(handlerDef.selector);
             $(target).off(fullEventName, selector);
         };
 
@@ -227,12 +218,10 @@
          * Triggers an event handler, given the handler definition.
          *
          * Parameters:
-         *
-         *     handlerDef - *{<EventHandlerDefinition>}* The handler definition.
-         *     handlerDef.eventName - *{string|function(this:Plugin):string}* The 
-         *         name of the event to trigger.
-         *     handlerDef.target - *{Object|function(this:Plugin):Object=}* The object 
-         *         to which the event handler is attached. (Optional; default: <Plugin.element>)
+         *     handlerDef - {<EventHandlerDefinition>} The handler definition.
+         *     handlerDef.eventName - {String|Function(this:Plugin):string} The name of the event to trigger.
+         *     handlerDef.target - {Object|Function(this:Plugin):Object} The object to which the event handler
+         *                         is attached. (optional; default: <Plugin.element>)
          */
         this.trigger = function (handlerDef) {
             debug("Plugin.trigger: handlerDef", handlerDef);
