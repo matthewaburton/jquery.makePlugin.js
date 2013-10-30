@@ -10,9 +10,8 @@
 
 (function ($) {
 
-    // Specifies whether to print debug messages to the JavaScript
-    // console or not
-    var DEBUG_MODE = true;
+    // Specifies whether to print debug messages to the JavaScript console or not
+    var DEBUG_MODE = false;
 
 
     // ------------------------------------------------------------
@@ -288,8 +287,7 @@
                 default:
                     return val;
             }
-    }
-
+        }
 
     } // End: Plugin(element)
 
