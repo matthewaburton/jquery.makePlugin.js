@@ -22,6 +22,10 @@
                 table.tableStyler("boldify");
             });
 
+            $("#bigifyButton").click(function (e) {
+                table.tableStyler("bigify");
+            });
+
             $("#setFontNameButton").click(function (e) {
                 var fontName = $("#fontName").val();
                 table.tableStyler("setFontName", fontName);
@@ -78,6 +82,7 @@
     </table>
 
     <button id="boldifyButton">Make text bold</button><br>
+    <button id="bigifyButton">Biffigy the text</button><br>
     <button id="setFontNameButton">Set font name</button><input type="text" id="fontName" value="Arial" /><br>
     <button id="destroyButton">Unbind event handlers</button><br>
     <button id="simulateClickButton">Simulate table click</button><br>

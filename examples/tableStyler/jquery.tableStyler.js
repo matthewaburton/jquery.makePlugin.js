@@ -23,6 +23,10 @@ $.makePlugin({
             this.helpers.makeTextBold();
         },
 
+        "bigify": function () {
+            this.helpers.biggifyText();
+        },
+
         "setFontName": function (fontName) {
             this.helpers.setFontName(fontName);
         },
@@ -53,6 +57,12 @@ $.makePlugin({
 
         "makeTextBold": function () {
             $(this.element).css("fontWeight", "bold");
+        },
+
+        "biggifyText": function () {
+            var textSize = parseInt($(this.element).css("fontSize"));
+            textSize += 1;
+            $(this.element).css("fontSize", textSize);
         },
 
         "setBorder": function (style) {
