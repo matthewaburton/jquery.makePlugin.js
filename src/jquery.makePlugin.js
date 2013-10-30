@@ -46,7 +46,7 @@
      *     target - {Object|Function():Object} The object to which the event handler will be attached.
      *     eventName - {String|Function():String} The name of the event to listen for.
      *     selector - {String|Function():String} The selector to use when defining the scope for an event handler.
-     *     handler - {Function(this:Plugin, ...[Object])} The event handler function. Event handlers are executed
+     *     handler - {Function(this:Plugin, EventObject)} The event handler function. Event handlers are executed
      *               in the context of the <Plugin> instance.
      *
      * Remarks:
@@ -56,6 +56,9 @@
      *     :     var element = e.target;
      *     :     // Event handler code...
      *     : }
+     *
+     * See Also:
+     *     http://api.jquery.com/category/events/event-object/
      */
 
     /**
@@ -161,12 +164,15 @@
          * Parameters:
          *     handlerDef - {<EventHandlerDefinition>} The handler definition.
          *     handlerDef.eventName - {String|Function(this:Plugin):string} The name of the event to listen for.
-         *     handlerDef.handler - {Function(this:Plugin, ...[Object])} The event handler function. Executed
+         *     handlerDef.handler - {Function(this:Plugin, EventObject)} The event handler function. Executed
          *                          in the context of the <Plugin> instance.
          *     handlerDef.target - {Object|Function(this:Plugin):Object} The object to which the event handler
          *                         will be attached. (optional; default: <Plugin.element>)
          *     handlerDef.selector - {String|Function(this:Plugin):String} The selector to use when defining
          *                           the scope for the event handler. (optional)
+         *
+         * See Also:
+         *     http://api.jquery.com/category/events/event-object/
          */
         this.bind = function (handlerDef) {
             debug("Plugin.bind: handlerDef", handlerDef);
