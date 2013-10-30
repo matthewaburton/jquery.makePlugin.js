@@ -333,7 +333,7 @@
         }
 
         // Export the plugin function to the jQuery 'fn' namespace
-        $.fn[pluginDef.pluginName] = function (method_) {
+        $.fn[pluginDef.pluginName] = function (arg) {
             // 'this' is the target element(s)
             var element = this;
 
@@ -342,16 +342,16 @@
             // If no method name was passed, or if the first argument is a config object,
             // initialize a new instance of the plugin.
             var api = pluginDef.api || { };
-            if (api[method_]) {
+            if (api[arg]) {
                 // TODO Add check to ensure that this is an API *method* (and not an object or something else)
                 var plugin = getPlugin(pluginDef, element);
-                return plugin.api[method_](Array.prototype.slice.call(arguments, 1));
-            } else if (typeof method_ === "object" || !method_) {
+                return plugin.api[arg](Array.prototype.slice.call(arguments, 1));
+            } else if (typeof arg === "object" || !arg) {
                 var options = (arguments.length > 0) ? arguments[0] : { };
                 return getPlugin(pluginDef, element, options).element;
             } else {
                 // Throw an error if an invalid/nonexistent API method was called
-                $.error("Method [" + method_ + "] does not exist for jQuery." + pluginDef.pluginName);
+                $.error("Method [" + arg + "] does not exist for jQuery." + pluginDef.pluginName);
             }
         }; // End: $.fn[pluginDef.pluginName] ...
     }; // End: makePlugin(pluginDef)
