@@ -13,8 +13,6 @@ $.makePlugin({
     },
 
     "init": function () {
-        console.info("this.element");
-
         this.helpers.applyStyle(this.config.style);
     },
 
