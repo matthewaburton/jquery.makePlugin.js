@@ -218,7 +218,7 @@
          *
          * Parameters:
          *     handlerDef - {<EventHandlerDefinition>} The handler definition.
-         *     handlerDef.eventName - {String|Function(this:Plugin):string} The name of the event to trigger.
+         *     handlerDef.eventName - {String|Function(this:Plugin):String} The name of the event to trigger.
          *     handlerDef.target - {Object|Function(this:Plugin):Object} The object to which the event handler
          *                         is attached. (optional; default: <Plugin.element>)
          */
