@@ -343,9 +343,8 @@
             // initialize a new instance of the plugin.
             var api = pluginDef.api || { };
             if (api[arg]) {
-                // TODO Add check to ensure that this is an API *method* (and not an object or something else)
                 var plugin = getPlugin(pluginDef, element);
-                return plugin.api[arg](Array.prototype.slice.call(arguments, 1));
+                return plugin.api[arg].apply(plugin, Array.prototype.slice.call(arguments, 1));
             } else if (typeof arg === "object" || !arg) {
                 var options = (arguments.length > 0) ? arguments[0] : { };
                 return getPlugin(pluginDef, element, options).element;
